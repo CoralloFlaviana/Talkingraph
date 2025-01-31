@@ -1,0 +1,48 @@
+openapi: '3.1.0'
+info:
+  title: sparql wrapper
+  version: '1.0'
+servers:
+  - url: http://localhost/v1
+paths:
+  /sparql_search:
+    get:
+      summary: |
+        this api method gets a search term from the user and includes it in a simple sparql query to get all the entities matching the term  
+        "SELECT DISTINCT * WHERE 
+        {?s ?p ?o;
+          rdfs:label ?slab
+        FILTER (REGEX(?slab, "pattern", "flags"))
+
+        }"
+      description: retrieve a list of entities from a KG by searching over a sparql query
+
+      parameters:
+        - $ref: "#/components/parameters/searchString"
+      
+      responses:
+        '200':
+          description: OK
+      content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/apiOutput"
+
+components:
+  schemas:
+    userInput:
+      type: string
+      description: whatever asked to the system in the form of a string
+
+    
+    apiOutput:
+      type: object
+      description: whatever api output encoded with the JSON:API formalism
+
+  parameters:
+    searchString:
+      name: search_string
+      in: query
+      required: true
+      schema:
+        $ref: "#/components/schemas/userInput"
