@@ -4,6 +4,7 @@ import secrets
 from fastapi import FastAPI, Depends, status, HTTPException, Request
 from fastapi.responses import JSONResponse
 from typing import Annotated,AnyStr
+import uvicorn
 
 from src import mytoyfunction
 
@@ -29,3 +30,8 @@ async def sparql_search(term: AnyStr) -> JSONResponse:
 
 
     return JSONResponse(content=my_output,headers=my_headers,media_type=JSON_API_MEDIA_TYPE)
+
+
+if __name__ == "__main__":
+
+    uvicorn.run(app, host="0.0.0.0", port=8080)
