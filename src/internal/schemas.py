@@ -59,16 +59,23 @@ class Namespace(BaseModel):
     left: Dict[str, EntityType]
     right: Dict[str, Entity]
 
+# Models for Information Extraction
+
+class Knowedge(BaseModel):
+    work: List[str] = Field(default_factory=list)
+    person: List[str] = Field(default_factory=list)
+    subject: List[str] = Field(default_factory=list)
+    publisher: List[str] = Field(default_factory=list)
+
+class ExtractedKnowledge(BaseModel):
+    template: Knowedge = Field(default_factory=Knowedge)
+
+
 class Config(BaseSettings):
     name: str
     endpoint: str
     namespace: Namespace
     prefix: Dict[str, str]
-    template: str
+    template: ExtractedKnowledge
 
 
-# Models for Information Extraction
-
-class Template(BaseModel):
-    prompt: str
-    template: str
