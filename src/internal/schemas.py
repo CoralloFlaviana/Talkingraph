@@ -77,5 +77,6 @@ class Config(BaseSettings):
     namespace: Namespace
     prefix: Dict[str, str]
     template: ExtractedKnowledge
+    prefixes: str
 
 

@@ -20,7 +20,7 @@ class Retriever:
         self.df = pd.read_parquet('data/entities_def.parquet')
 
 
-    def extract_knowledge(self,text, template=config.template, max_length=10_000, max_new_tokens=4_000):
+    def extract_knowledge(self,text,template=config.template, max_length=10_000, max_new_tokens=4_000):
         model = self.model
         tokenizer = self.tokenizer
         
@@ -57,9 +57,10 @@ class Retriever:
     def link_entities(self, output_template):
         all_entities = list()
         for item in output_template:
-            for ent in output_template[item]:
-                processed = self.link(ent,item)
-                all_entities.extend(processed)
+            if len(output_template[item])>0:
+                for ent in output_template[item]:
+                    processed = self.link(ent,item)
+                    all_entities.extend(processed)
         
         return all_entities
 

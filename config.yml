@@ -21,6 +21,11 @@ app:
         rel: urw:wasPublishedWhen
   prefix: 
     urw: <https://purl.archive.org/urwriters#> 
+  prefixes: |
+    urw: <https://purl.archive.org/urwriters#> 
+    rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    prov: <http://www.w3.org/ns/prov#>
+    urb: <https://purl.archive.org/urbooks#>
   template: 
     QuestionFocus: ''
     entities:
