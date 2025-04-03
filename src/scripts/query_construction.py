@@ -65,18 +65,29 @@ def finder(urw_prefix:str, configEntity:str, o:str):
     return query
 
 
-def finder_tmp(o:str):
+def finder_tmp(o:str,prop:str=None):
 
     # Costruzione della query SPARQL con validazione
-    query = f"""
-    {config.prefixes}
-    
-    SELECT DISTINCT ?s, ?sogg WHERE {{
-      {{ ?s ?p {o} }} UNION {{ {o} ?p ?s }} .
-      ?s rdfs:label ?sogg.
+    if prop is None:
+      query = f"""
+      {config.prefixes}
       
-    }}
-    """
+      SELECT DISTINCT ?s, ?sogg WHERE {{
+        {{ ?s ?p {o} }} UNION {{ {o} ?p ?s }} .
+        ?s rdfs:label ?sogg.
+        
+      }}
+      """
+    else:
+      query = f"""
+      {config.prefixes}
+      
+      SELECT DISTINCT ?s, ?sogg WHERE {{
+        {{ ?s {prop} {o} }} UNION {{ {o} {prop} ?s }} .
+        ?s rdfs:label ?sogg.
+        
+      }}
+      """
     return query
 def searchTypeEntity(urw_prefix:str, entity_type:str, prefix_type:str) :
 
