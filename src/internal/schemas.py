@@ -61,22 +61,23 @@ class Namespace(BaseModel):
 
 # Models for Information Extraction
 
-class Knowedge(BaseModel):
+'''class Knowedge(BaseModel):
     work: List[str] = Field(default_factory=list)
     person: List[str] = Field(default_factory=list)
-    subject: List[str] = Field(default_factory=list)
-    publisher: List[str] = Field(default_factory=list)
+    keyword: List[str] = Field(default_factory=list)
+    project: List[str] = Field(default_factory=list)
 
 class ExtractedKnowledge(BaseModel):
     template: Knowedge = Field(default_factory=Knowedge)
 
-
+'''
 class Config(BaseSettings):
     name: str
     endpoint: str
     namespace: Namespace
     prefix: Dict[str, str]
-    template: ExtractedKnowledge
+    template: Dict
     prefixes: str
+    files: Dict
 
 

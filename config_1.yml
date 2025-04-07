@@ -1,0 +1,42 @@
+app:
+  name: reo
+  endpoint: https://fuseki.hfpo-kfpo.di.unito.it/reo/query
+  namespace: 
+    left:
+      entitytype1: 
+        type: reo:Person
+        prefix: "PREFIX reo: <https://www.semanticweb.org/research-ontology/>"
+    right:
+      entità1:
+        label: work
+        rel: reo:isAuthoredBy
+      entità2:
+        label: person
+        rel: urw:hasRole
+      entità3:
+        label: work
+        rel: soa:hasTopic
+      entità4:
+        label: project
+        rel: reo:isPartecipatedBy
+  prefix: 
+    reo: <http://www.semanticweb.org/research-ontology/>
+  prefixes: |
+    rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    prov: <http://www.w3.org/ns/prov#>
+    urb: <https://purl.archive.org/urbooks#>
+    dul: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#>
+    soa: <https://semopenalex.org/ontology/>
+    reo: <https://www.semanticweb.org/research-ontology/>
+  template: 
+    entities:
+      work: []
+      person: [] 
+      keyword: []
+      project: []
+  
+  files:
+    work: data/faiss_db/text/Work.index
+    person: data/faiss_db/text/Person.index
+    keyword: data/faiss_db/text/Keywords.index
+    project: data/faiss_db/text/Project.index

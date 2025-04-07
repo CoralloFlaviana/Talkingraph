@@ -7,7 +7,7 @@ from internal.schemas import SearchResponse, FindResult, SearchResultURI
 from internal.config import config as config 
 from scripts.retrieval import Retriever
 from scripts.query_construction import finder, searchExactly, searchRegex, searchTypeEntity
-
+from typing import List
 retriever = Retriever()
 
 
@@ -155,18 +155,9 @@ def search_type(entitytype: str) -> SearchResultURI:
 
 
 @query.get("/graphrag")
-def retrieve(text:str,type:str,k:int):
-    template= eval(config.template)
-    my_res = []
-    result = retriever.extract_knowledge(template=template,text=text)
-    result = json.loads(result)
+def retrieve(text:str,k:int=1):
+    ret = retriever.extract_knowledge(text)
 
-    for res in result['entities'][type]:
+    results = retriever.link_entities(json.loads(ret),k=k)
 
-        linked = retriever.link(res,type,k)
-        
-    
-        my_res.extend(linked)
-
-    results = find(1,f"urw:{my_res[0][0]['entity']}")
     return results

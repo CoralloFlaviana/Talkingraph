@@ -17,14 +17,14 @@ class Retriever:
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.bfloat16, trust_remote_code=True).to(self.device).eval()
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
         self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.df = pd.read_parquet('data/entities_def.parquet')
+        self.df = pd.read_parquet('data/reo_entities.parquet')
 
 
     def extract_knowledge(self,text,template=config.template, max_length=10_000, max_new_tokens=4_000):
         model = self.model
         tokenizer = self.tokenizer
         
-        prompt = f"""<|input|>\n### Template:\n{template.dict()}\n### Text:\n{text}\n\n<|output|>"""
+        prompt = f"""<|input|>\n### Template:\n{template}\n### Text:\n{text}\n\n<|output|>"""
         outputs = []
         with torch.no_grad():
             
@@ -35,31 +35,30 @@ class Retriever:
         
         return outputs[0].split("<|output|>")[1]
     
-    def link(self, entity, type,k=3):
-        if type == 'work':
-            index = faiss.read_index('data/faiss_db/text/work.faiss')
-        elif type == 'person':
-            index = faiss.read_index('data/faiss_db/text/person.faiss')
-        elif type == 'subject':
-            index = faiss.read_index('data/faiss_db/text/subject.faiss')
-        elif type == 'publisher':
-            index = faiss.read_index('data/faiss_db/text/publisher.faiss')
+    def link(self, entity, type,k):
         
+        index = faiss.read_index(config.files[type])
         query_vector = self.sentence_model.encode([entity], return_tensors=True)
+        
         distances, indices = index.search(query_vector, k)
         retrieved = list()
+        
         for i,idx in enumerate(indices[0]):
-            
-            retrieved.append({'entity':self.df[(self.df.text_id==idx)&(self.df.type==type)].entity.values[0],'distance':distances[0][i].item()})
-
+            print(distances)
+            try:
+                retrieved.append({'entity':self.df[(self.df.faiss_id==idx)&(self.df.type==type)].entity.values[0],'distance':distances[0][i].item()})
+            except:
+                continue
         return retrieved
     
-    def link_entities(self, output_template):
+    def link_entities(self, output_template,k):
         all_entities = list()
-        for item in output_template:
-            if len(output_template[item])>0:
-                for ent in output_template[item]:
-                    processed = self.link(ent,item)
+        for item in output_template['entities']:
+            
+            if len(output_template['entities'][item])>0:
+                for ent in output_template['entities'][item]:
+                    
+                    processed = self.link(ent,item,k)
                     all_entities.extend(processed)
         
         return all_entities

@@ -1,6 +1,6 @@
 app:
   name: wlkg
-  endpoint: https://kgccc.di.unito.it/sparql/wl-kg
+  endpoint: https://fuseki.hfpo-kfpo.di.unito.it/wlkg/query
   namespace: 
     left:
       entitytype1: 
@@ -33,3 +33,8 @@ app:
       person: [] 
       subject: []
       publisher: []
+  files:
+    work: data/faiss_db/text/work.index
+    person: data/faiss_db/text/person.index
+    subject: data/faiss_db/text/subject.index
+    publisher: data/faiss_db/text/publisher.index
