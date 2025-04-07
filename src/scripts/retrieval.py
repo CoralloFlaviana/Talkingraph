@@ -44,9 +44,9 @@ class Retriever:
         retrieved = list()
         
         for i,idx in enumerate(indices[0]):
-            print(distances)
+            ent = self.df[(self.df.faiss_id==idx)&(self.df.type==type)]
             try:
-                retrieved.append({'entity':self.df[(self.df.faiss_id==idx)&(self.df.type==type)].entity.values[0],'distance':distances[0][i].item()})
+                retrieved.append({'entity':ent.entity.values[0],'label':ent.label.values[0],'distance':distances[0][i].item()})
             except:
                 continue
         return retrieved
