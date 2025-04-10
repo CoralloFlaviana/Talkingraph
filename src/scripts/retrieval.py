@@ -17,7 +17,7 @@ class Retriever:
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.bfloat16, trust_remote_code=True).to(self.device).eval()
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
         self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.df = pd.read_parquet('data/reo_entities.parquet')
+        self.df = pd.read_parquet('data/entities_def.parquet')
 
 
     def extract_knowledge(self,text,template=config.template, max_length=10_000, max_new_tokens=4_000):
@@ -44,7 +44,7 @@ class Retriever:
         retrieved = list()
         
         for i,idx in enumerate(indices[0]):
-            ent = self.df[(self.df.faiss_id==idx)&(self.df.type==type)]
+            ent = self.df[(self.df.text_id==idx)&(self.df.type==type)]
             try:
                 retrieved.append({'entity':ent.entity.values[0],'label':ent.label.values[0],'distance':distances[0][i].item()})
             except:

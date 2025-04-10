@@ -34,7 +34,7 @@ app:
       subject: []
       publisher: []
   files:
-    work: data/faiss_db/text/work.index
-    person: data/faiss_db/text/person.index
-    subject: data/faiss_db/text/subject.index
-    publisher: data/faiss_db/text/publisher.index
+    work: data/faiss_db/text/work.faiss
+    person: data/faiss_db/text/person.faiss
+    subject: data/faiss_db/text/subject.faiss
+    publisher: data/faiss_db/text/publisher.faiss
