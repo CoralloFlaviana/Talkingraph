@@ -22,10 +22,10 @@ app:
   prefix: 
     urw: <https://purl.archive.org/urwriters#> 
   prefixes: |
-    urw: <https://purl.archive.org/urwriters#> 
-    rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    prov: <http://www.w3.org/ns/prov#>
-    urb: <https://purl.archive.org/urbooks#>
+    PREFIX urw: <http://purl.archive.org/urwriters#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX prov: <http://www.w3.org/ns/prov#>
+    PREFIX urb: <http://purl.archive.org/urbooks#>
   template: 
     QuestionFocus: ''
     entities:
@@ -33,8 +33,16 @@ app:
       person: [] 
       subject: []
       publisher: []
+  properties:
+    - prov:wasAttributedTo : wrote
+    - urw:wasPublishedBy : has publisher
+    - urw:publishingLanguage : published in
+    - urw:citizenship: citizen of
+    - urw:yearOfBirth: birth year
+    - urw:countryOfBirth: country of birth
+    - urw:authorTopic: has topic
   files:
-    work: data/faiss_db/text/work.index
-    person: data/faiss_db/text/person.index
-    subject: data/faiss_db/text/subject.index
-    publisher: data/faiss_db/text/publisher.index
+    work: data/faiss_db/text/work.faiss
+    person: data/faiss_db/text/person.faiss
+    subject: data/faiss_db/text/subject.faiss
+    publisher: data/faiss_db/text/publisher.faiss

@@ -72,8 +72,9 @@ def finder_tmp(o:str,prop:str=None):
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?s, ?sogg WHERE {{
-        {{ ?s ?p {o} }} UNION {{ {o} ?p ?s }} .
+      SELECT DISTINCT ?sogg WHERE {{
+      BIND ({o} as ?o) .
+        {{ ?s ?p ?o }} UNION {{ ?o ?p ?s }} .
         ?s rdfs:label ?sogg.
         
       }}
@@ -82,8 +83,9 @@ def finder_tmp(o:str,prop:str=None):
       query = f"""
       {config.prefixes}
       
-      SELECT DISTINCT ?s, ?sogg WHERE {{
-        {{ ?s {prop} {o} }} UNION {{ {o} {prop} ?s }} .
+      SELECT DISTINCT ?sogg ?p WHERE {{
+      BIND ({o} as ?o) .
+        {{ ?s {prop} ?o}} UNION {{ ?o {prop} ?s }} .
         ?s rdfs:label ?sogg.
         
       }}

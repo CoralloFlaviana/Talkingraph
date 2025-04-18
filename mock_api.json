@@ -1,0 +1,14 @@
+{
+    "results":
+    [{
+        "reply": "If you like Baricco, you can read Cordiali Saluti written by Andrea Bajani",
+        "entity": "urb:12345",
+        "label": "Cordiali Saluti"
+    },
+    {
+        "reply": "If you want to explore authors similar to Baricco, you might want to read a book of Ammaniti",
+        "entity": "urw:12345",
+        "label": "Niccolò Ammaniti"
+    }
+]
+}

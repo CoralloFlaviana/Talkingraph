@@ -79,5 +79,6 @@ class Config(BaseSettings):
     template: Dict
     prefixes: str
     files: Dict
+    properties: List[Dict]
 
 

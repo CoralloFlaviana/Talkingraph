@@ -5,8 +5,10 @@ import json
 import pandas as pd
 import faiss
 import numpy as np
-
+from SPARQLWrapper import SPARQLWrapper, JSON
+from scripts.query_construction import finder_tmp
 from internal.config import config as config 
+from typing import Dict, Tuple, List
 
 sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
 
@@ -17,7 +19,7 @@ class Retriever:
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.bfloat16, trust_remote_code=True).to(self.device).eval()
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
         self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.df = pd.read_parquet('data/reo_entities.parquet')
+        self.df = pd.read_parquet('data/entities_def.parquet')
 
 
     def extract_knowledge(self,text,template=config.template, max_length=10_000, max_new_tokens=4_000):
@@ -61,7 +63,40 @@ class Retriever:
                     processed = self.link(ent,item,k)
                     all_entities.extend(processed)
         
+        all_entities = sorted(all_entities, key=lambda x: x['distance'])
+
         return all_entities
+    
+    def retrieve_triples(self, entity=Dict,property:Dict=None):
+        sparql = SPARQLWrapper(config.endpoint)
+        prop = next(iter(property))
+        query = finder_tmp(entity["entity"],prop) if property is not None else finder_tmp(entity['uri'])
+        print(query)
+
+        try:
+            sparql.setQuery(query)
+            sparql.setReturnFormat(JSON)
+            results = sparql.query().convert()
+
+        except Exception as e:
+            raise Exception(f"SPARQL Query Error: {str(e)}")
+        
+        results = [(entity['label'],property[prop],x['sogg']['value']) for x in results['results']['bindings']]
+
+        return results
+    
+    def link_to_triples(self, entities:List[Dict],k=1,properties=config.properties):
+        all_triples = list()
+        for item in entities[:k]:
+            for prop in properties:
+                
+                retrieved = self.retrieve_triples(item,prop)
+                
+                all_triples.extend(retrieved)
+        
+        return all_triples
+
+
 
 
 

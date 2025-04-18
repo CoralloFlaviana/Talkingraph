@@ -158,6 +158,8 @@ def search_type(entitytype: str) -> SearchResultURI:
 def retrieve(text:str,k:int=1):
     ret = retriever.extract_knowledge(text)
 
-    results = retriever.link_entities(json.loads(ret),k=k)
+    res = retriever.link_entities(json.loads(ret),k=k)
+
+    results = retriever.link_to_triples(res,k=k)
 
     return results
