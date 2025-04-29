@@ -80,5 +80,6 @@ class Config(BaseSettings):
     prefixes: str
     files: Dict
     properties: List[Dict]
+    device: str
 
 

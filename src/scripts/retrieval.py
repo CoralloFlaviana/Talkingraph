@@ -13,9 +13,9 @@ from typing import Dict, Tuple, List
 sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 class Retriever:
-    def __init__(self):
+    def __init__(self,device=config.device):
         self.model_name = "numind/NuExtract-tiny-v1.5"
-        self.device = "mps"
+        self.device = device
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch.bfloat16, trust_remote_code=True).to(self.device).eval()
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
         self.sentence_model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -53,7 +53,7 @@ class Retriever:
                 continue
         return retrieved
     
-    def link_entities(self, output_template,k):
+    def link_entities(self, output_template,k=10):
         all_entities = list()
         for item in output_template['entities']:
             
@@ -71,7 +71,6 @@ class Retriever:
         sparql = SPARQLWrapper(config.endpoint)
         prop = next(iter(property))
         query = finder_tmp(entity["entity"],prop) if property is not None else finder_tmp(entity['uri'])
-        print(query)
 
         try:
             sparql.setQuery(query)
@@ -85,16 +84,20 @@ class Retriever:
 
         return results
     
-    def link_to_triples(self, entities:List[Dict],k=1,properties=config.properties):
-        all_triples = list()
+    def link_to_triples(self, entities:List[Dict],k=10,properties=config.properties):
+        
+        output_list = list()
+        
         for item in entities[:k]:
+            all_triples = list()
             for prop in properties:
                 
                 retrieved = self.retrieve_triples(item,prop)
                 
                 all_triples.extend(retrieved)
+            output_list.append({item['label']:all_triples})
         
-        return all_triples
+        return output_list
 
 
 

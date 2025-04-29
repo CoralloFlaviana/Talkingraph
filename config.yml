@@ -41,8 +41,10 @@ app:
     - urw:yearOfBirth: birth year
     - urw:countryOfBirth: country of birth
     - urw:authorTopic: has topic
+    - urw:workTopic: has topic
   files:
     work: data/faiss_db/text/work.faiss
     person: data/faiss_db/text/person.faiss
     subject: data/faiss_db/text/subject.faiss
     publisher: data/faiss_db/text/publisher.faiss
+  device: mps

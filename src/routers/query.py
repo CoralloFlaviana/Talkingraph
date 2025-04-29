@@ -155,11 +155,17 @@ def search_type(entitytype: str) -> SearchResultURI:
 
 
 @query.get("/graphrag")
-def retrieve(text:str,k:int=1):
+def retrieve(text:str):
     ret = retriever.extract_knowledge(text)
+    
 
-    res = retriever.link_entities(json.loads(ret),k=k)
+    res = retriever.link_entities(json.loads(ret))
 
-    results = retriever.link_to_triples(res,k=k)
+    results = retriever.link_to_triples(res)
 
-    return results
+    return {
+        'template': json.loads(ret),
+        'entities': res,
+        'triples': results
+
+    }

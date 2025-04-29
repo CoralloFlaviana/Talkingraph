@@ -15,8 +15,8 @@ model = AutoModelForCausalLM.from_pretrained(
 def build_prompt(triples):
     examples = """
 
-Given the following triple, generate a verbalization that describes the relationships between the entities.
-""" + "\n".join(f"({s}, {p}, {o})" for s, p, o in triples) + "\n\nVerbalization:"
+Given the question 'which is the most relevant book written by achebe?', Choose the most relevant among the following triples:
+""" + "\n".join(f"({s}, {p}, {o})" for s, p, o in triples) + "\n\nOutput:"
     return examples.strip()
 
 # === Your Triples to Verbalize ===
@@ -459,14 +459,14 @@ triples = [
 ]
 
 # === Create Prompt ===
-prompt = build_prompt(triples[7:8])
+prompt = build_prompt(triples[:8])
 inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
 # === Generate Output ===
 print("✨ Generating verbalization...")
 output = model.generate(
     **inputs,
-    max_new_tokens=100,
+    max_new_tokens=200,
     temperature=0.7,
     top_p=0.9,
     do_sample=True,
